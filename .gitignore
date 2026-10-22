@@ -1,0 +1,4 @@
+images/
+*.pdf
+assets/card.jpg
+.DS_Store

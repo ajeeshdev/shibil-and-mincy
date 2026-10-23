@@ -177,6 +177,7 @@ body.joined .fly img{opacity:0}
 #music{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:40;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;
   background:#fffdf8e6;box-shadow:0 6px 18px #0000002a,inset 0 0 0 1px var(--gold-l);color:var(--gold)}
 #music[hidden]{display:none}
+.heart{position:fixed;z-index:39;pointer-events:none;line-height:1;text-shadow:0 2px 6px #0003;will-change:transform,opacity}
 #music.playing svg{animation:spin 6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -393,6 +394,23 @@ const syncMusic = () => { music.classList.toggle('playing', !bgm.paused); music.
 bgm.addEventListener('play', syncMusic); bgm.addEventListener('pause', syncMusic);
 bgm.addEventListener('error', () => music.hidden = true); // no music file → no button
 music.onclick = () => bgm.paused ? bgm.play() : bgm.pause();
+
+/* ---- Live-style hearts rising from the music button while the song plays ---- */
+const HEARTS = ['#ff4d6d', '#ff8fa3', '#e8c77a', '#ff6b81', '#f7c6d0'];
+function heart() {
+  if (document.hidden || music.hidden || bgm.paused) return;
+  const r = music.getBoundingClientRect(), h = document.createElement('span'), dx = (Math.random() - .5) * 70;
+  h.className = 'heart'; h.textContent = '\u2665\uFE0E'; // text heart, not the emoji
+  h.style.cssText = `left:${r.left + r.width / 2}px;top:${r.top}px;font-size:${14 + Math.random() * 12}px;color:${HEARTS[Math.random() * HEARTS.length | 0]}`;
+  document.body.appendChild(h);
+  h.animate([
+    { transform: 'translate(-50%,0) scale(.3)', opacity: 0 },
+    { transform: `translate(calc(-50% + ${dx * .4}px),-60px) scale(1)`, opacity: 1, offset: .2 },
+    { transform: `translate(calc(-50% - ${dx * .3}px),-170px) scale(1)`, opacity: .9, offset: .55 },
+    { transform: `translate(calc(-50% + ${dx}px),-290px) scale(.85)`, opacity: 0 }
+  ], { duration: 2600 + Math.random() * 1200, easing: 'ease-out' }).onfinish = () => h.remove();
+}
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(heart, 420);
 
 $('#cover').onclick = () => {
   bgm.play().then(() => music.hidden = false).catch(() => {}); // must start inside the tap for iOS

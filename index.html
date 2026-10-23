@@ -302,7 +302,7 @@ body.joined .fly img{opacity:0}
       <p class="message"><i data-k="when"></i><br>Scan the QR or open Google Maps for directions to the celebration.</p>
       <div class="btns">
         <a class="btn" id="mapBtn" target="_blank" rel="noopener">Open Google Maps</a>
-        <a class="btn ghost" id="shareBtn" target="_blank" rel="noopener">Share on WhatsApp</a>
+        <a class="btn ghost" id="shareBtn">Share on WhatsApp</a>
       </div>
     </div>
   </section>
@@ -366,7 +366,7 @@ const CONFIG = {
 const C = CONFIG, $ = s => document.querySelector(s);
 document.querySelectorAll('[data-k]').forEach(el => el.textContent = C[el.dataset.k]);
 $('#mapBtn').href = C.mapLink;
-$('#shareBtn').href = 'https://wa.me/?text=' + encodeURIComponent(`You're invited to the wedding of ${C.shortNames} 💍\n${C.when}\n${C.venue}, ${C.place}\n${location.href}`);
+$('#shareBtn').href = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(`You're invited to the wedding of ${C.shortNames} 💍\n${C.when}\n${C.venue}, ${C.place}\n${location.href}`);
 
 /* ---- Petal burst ---- */
 const COLORS = ['#f7c6d0', '#f2a7b8', '#e8c77a', '#fff1d6', '#d98ca1', '#f5d9a8'];
